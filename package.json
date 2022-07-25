@@ -1,22 +1,20 @@
 {
-  "name": "electron-quick-start",
+  "name": "internet-speed-monitor",
   "version": "1.0.0",
-  "description": "A minimal Electron application",
+  "description": "Internet speed tester application",
   "main": "main.js",
   "scripts": {
     "start": "electron ."
   },
   "repository": "https://github.com/electron/electron-quick-start",
-  "keywords": [
-    "Electron",
-    "quick",
-    "start",
-    "tutorial",
-    "demo"
-  ],
-  "author": "GitHub",
-  "license": "CC0-1.0",
+  "keywords": [],
+  "author": "Rigoberto L. Salgado Reyes",
+  "license": "AGPL-3.0",
   "devDependencies": {
-    "electron": "^19.0.8"
+    "electron": "^19.0.9"
+  },
+  "dependencies": {
+    "sqlite3": "^5.0.10",
+    "universal-speedtest": "^2.0.5"
   }
 }

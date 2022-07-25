@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="Content-Security-Policy"
+              content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'">
+        <link rel="stylesheet" href="../../../resources/materialize/1.0.0/css/materialize.min.css">
+
+        <link href="mainWindow.css" rel="stylesheet">
+        <title>Internet Speed Monitor</title>
+    </head>
+    <body style="-webkit-app-region: drag; border: solid;">
+        <div class="container">
+            <div class="col">
+                <div class="row center">
+                    <label id="label_time" class="center-align">--:--:--</label>
+                </div>
+                <div class="row">
+                    <div class="col left">
+                        <div class="row">
+                            <div class="col">
+                                <label id="label_download">0</label>
+                            </div>
+                            <div class="col">
+                                <i class="medium material-icons">file_download</i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col right">
+                        <div class="row">
+                            <div class="col">
+                                <label id="label_upload">0</label>
+                            </div>
+                            <div class="col">
+                                <i class="medium material-icons">file_upload</i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col center" style="width: 25%;">
+                        <a class="btn-floating" id="button_history"><i class="material-icons">history</i></a>
+                    </div>
+                    <div class="col center" style="width: 25%;">
+                        <a class="btn-floating" id="button_refresh"><i class="material-icons">refresh</i></a>
+                    </div>
+                    <div class="col center" style="width: 25%;">
+                        <a class="btn-floating" id="button_settings"><i class="material-icons">settings</i></a>
+                    </div>
+                    <div class="col center" style="width: 25%;">
+                        <a class="btn-floating" id="button_close"><i class="material-icons">close</i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- You can also require other files to run in this process -->
+        <!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>-->
+        <script src="../../../resources/materialize/1.0.0/js/materialize.min.js"></script>
+        <script src="mainWindow.js"></script>
+    </body>
+</html>
