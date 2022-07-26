@@ -1,0 +1,55 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="Content-Security-Policy"
+              content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'">
+        <link href="../../../resources/datatables/1.12.1/css/datatables.min.css" rel="stylesheet">
+        <link href="../../../resources/datatables/Buttons/2.2.3/css/buttons.dataTables.min.css" rel="stylesheet">
+        <link href="historyWindow.css" rel="stylesheet">
+        <title>Internet Speed History</title>
+    </head>
+    <body>
+        <div class="container">
+            <table id="table_speed_history" class="display" style="width:100%">
+                <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>DownloadSpeed</th>
+                    <th>UploadSpeed</th>
+                    <th>Ping</th>
+                    <th>Jitter</th>
+                    <th>UpdateAt</th>
+                    <th>ISP</th>
+                    <th>Server</th>
+                    <th>Server Country</th>
+                    <th>Server City</th>
+                    <th>Server Distance</th>
+                </tr>
+                </thead>
+                <tfoot>
+                <tr>
+                    <th>Id</th>
+                    <th>DownloadSpeed</th>
+                    <th>UploadSpeed</th>
+                    <th>Ping</th>
+                    <th>Jitter</th>
+                    <th>UpdateAt</th>
+                    <th>ISP</th>
+                    <th>Server</th>
+                    <th>Server Country</th>
+                    <th>Server City</th>
+                    <th>Server Distance</th>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <!-- You can also require other files to run in this process -->
+        <script src="../../../resources/jquery-3.5.1.js"
+                integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+        <script src="../../../resources/datatables/1.12.1/js/datatables.min.js"></script>
+        <script src="../../../resources/datatables/Buttons/2.2.3/js/dataTables.buttons.min.js"></script>
+        <script src="../../../resources/datatables/JSZip/2.5.0/jszip.min.js"></script>
+        <script src="historyWindow.js"></script>
+    </body>
+</html>

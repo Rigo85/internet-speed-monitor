@@ -16,11 +16,31 @@ class SpeedTestRepository {
     }
 
     getById(id) {
-        return this.dao.get(`SELECT * FROM settings WHERE id = ?`,[id]);
+        return this.dao.get(`SELECT * FROM speedtest WHERE id = ?`,[id]);
     }
 
     getAll() {
-        return this.dao.all(`SELECT * FROM settings`);
+        return this.dao.all(`SELECT * FROM speedtest`);
+    }
+
+    getAllData() {
+        return this.dao.all(`
+            select
+                id,
+                "speedResult" ->> 'downloadSpeed' as "DownloadSpeed",
+                "speedResult" ->> 'uploadSpeed' as "UploadSpeed",
+                "speedResult" ->> 'ping' as "Ping",
+                "speedResult" ->> 'jitter' as "Jitter",
+                "speedResult" ->> 'updateAt' as "UpdateAt",
+                "speedResult" -> 'client' ->> 'isp' as "ISP",
+                "speedResult" -> 'server' ->> 'sponsor' as "Server",
+                "speedResult" -> 'server' ->> 'country' as "Server Country",
+                "speedResult" -> 'server' ->> 'city' as "Server City",
+                "speedResult" -> 'server' ->> 'distance' as "Server Distance"
+            from speedtest
+            order by
+                id desc ;
+        `);
     }
 }
 

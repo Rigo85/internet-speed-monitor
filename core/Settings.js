@@ -52,6 +52,10 @@ class Settings {
     getSettings() {
         return this.settingsRepository.getSettings();
     }
+
+    getSpeedHistory() {
+        return this.speedTestRepository.getAllData();
+    }
 }
 
 module.exports = Settings;
