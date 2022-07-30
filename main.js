@@ -7,22 +7,26 @@ const path = require("path");
 app.showExitPrompt = true;
 const settings = new Settings();
 
-function createHistoryWindow() {
-
-}
-
-function speedHistory(event, value) {
-    historyWindowController.createWindow();
-    historyWindowController.onShow();
-}
+// function speedHistory(event, value) {
+//     historyWindowController.createWindow();
+//     historyWindowController.onShow();
+// }
 
 app.whenReady().then(() => {
+
+    const mainWindowController = new MainWindowController(settings);
+    const historyWindowController = new HistoryWindowController(settings, mainWindowController);
+
     setTimeout(() => {
         ipcMain.on("close-app", mainWindowController.closeApp);
         ipcMain.on("reload", mainWindowController.reloadApp);
 
         // todo deshabilitar el botón hasta que esté la respuesta.
-        ipcMain.on("speed-history", speedHistory);
+        // ipcMain.on("speed-history", speedHistory);
+        ipcMain.on("speed-history", (event, value) => {
+            historyWindowController.createWindow();
+            historyWindowController.onShow();
+        });
 
         mainWindowController.createWindow();
 
@@ -40,36 +44,38 @@ app.whenReady().then(() => {
 class MainWindowController {
     constructor(settings) {
         this.settings = settings;
+    }
 
-        this.logging = (data) => {
-            console.info("speed-update", JSON.stringify({
-                time: this.formatTime(data.updateAt),
-                downloadSpeed: data.downloadSpeed,
-                uploadSpeed: data.uploadSpeed
-            }));
-        };
-
-        this.notify = (data) => {
-            this.mainWindow.webContents.send(
-                "speed-update",
-                {
-                    time: this.formatTime(data.updateAt),
-                    downloadSpeed: data.downloadSpeed,
-                    uploadSpeed: data.uploadSpeed
-                })
-        };
-
-        this.formatTime = (date) => Intl.DateTimeFormat('en', {
+    formatTime(date) {
+        return Intl.DateTimeFormat('en', {
             hour: "numeric",
             minute: "numeric",
             second: "numeric",
             hour12: true
         }).format(date);
-
-        this.saveOnDB = (data) => {
-            this.settings.addSpeedTest(JSON.stringify(data));
-        };
     }
+
+    logging(data) {
+        console.info("speed-update", JSON.stringify({
+            time: this.formatTime(data.updateAt),
+            downloadSpeed: data.downloadSpeed,
+            uploadSpeed: data.uploadSpeed
+        }));
+    }
+
+    notify(data) {
+        this.mainWindow.webContents.send(
+            "speed-update",
+            {
+                time: this.formatTime(data.updateAt),
+                downloadSpeed: data.downloadSpeed,
+                uploadSpeed: data.uploadSpeed
+            })
+    }
+
+    saveOnDB(data) {
+        this.settings.addSpeedTest(JSON.stringify(data));
+    };
 
     onClose() {
         this.mainWindow.on("close", this.closeApp);
@@ -126,14 +132,20 @@ class MainWindowController {
 
     // todo crear un consumer que "haga algo" cuando un parámetro baje de un determinado umbral.
     reloadApp(event, value, consumers = [this.logging, this.notify, this.saveOnDB]) {
+        // const consumers = [this.logging, this.notify, this.saveOnDB];
         // todo agregar hora a los logs.
         console.info("reloading...");
         speedTest()
             .then(data => {
                 if (data) {
-                    consumers.forEach(consumer => {
-                        consumer(data);
-                    });
+                    for (let i = 0; i < consumers.length; i++) {
+                        console.log(consumers[i]);
+                        console.log(JSON.stringify(consumers[i]));
+                        consumers[i](data);
+                    }
+                    // consumers.forEach(consumer => {
+                    //     consumer(data);
+                    // });
                 } else {
                     // volver a correr.
                     // mostrar un mensaje que ha ocurrido un error, pregunta si desea volver a ejecutar es test speed.
@@ -172,7 +184,7 @@ class MainWindowController {
     }
 }
 
-const mainWindowController = new MainWindowController(settings);
+// const mainWindowController = new MainWindowController(settings);
 
 // --------------- HistoryWindowController --------------
 class HistoryWindowController {
@@ -183,11 +195,11 @@ class HistoryWindowController {
 
     createWindow() {
         this.historyWindow = new BrowserWindow({
-            width: 1024,
+            width: 1050,
             height: 496,
             modal: true,
             show: false,
-            parent: this.parent,
+            parent: this.parent.getWindow(),
             webPreferences: {
                 preload: path.join(__dirname, 'preload.js'),
                 nodeIntegration: true
@@ -195,11 +207,16 @@ class HistoryWindowController {
         });
 
         this.historyWindow.loadFile(path.join(__dirname, "mvc/view/history/historyWindow.html"));
-        // this.historyWindow.removeMenu();
+        this.historyWindow.removeMenu();
         this.historyWindow.setResizable(true);
         this.historyWindow.on("ready-to-show", () => {
             this.historyWindow.show();
         });
+
+        // this.historyWindow.on("close", (event, args) => {
+        //     console.info("enabling history button");
+        //     this.historyWindow.webContents.send("toggle-speed-history");
+        // });
     }
 
     sendData() {
@@ -217,6 +234,7 @@ class HistoryWindowController {
             this.sendData();
         });
     }
+
 }
 
-const historyWindowController = new HistoryWindowController(settings, mainWindowController.getWindow());
+// const historyWindowController = new HistoryWindowController(settings, mainWindowController);

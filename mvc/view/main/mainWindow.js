@@ -39,3 +39,8 @@ window.electronAPI.on("speed-update", (event, value) => {
     labelDownload.innerText = value.downloadSpeed;
     labelUpload.innerText = value.uploadSpeed;
 });
+
+window.electronAPI.on("toggle-speed-history", (event, value) => {
+    console.info("toggling speed history");
+    buttonHistory.classList.add("disable");
+});
