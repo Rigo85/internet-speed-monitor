@@ -14,7 +14,7 @@
   "author": "Rigoberto L. Salgado Reyes",
   "license": "AGPL-3.0",
   "devDependencies": {
-    "electron": "^19.0.9",
+    "electron": "^20.0.0",
     "electron-packager": "^15.5.1"
   },
   "dependencies": {
