@@ -1,0 +1,7 @@
+input#range_refresh_time {
+    width: 100%;
+}
+
+label#label_range_refresh {
+    font-size: large;
+}

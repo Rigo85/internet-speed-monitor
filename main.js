@@ -4,37 +4,29 @@ const {speedTest} = require("./core/SpeedTester");
 const Settings = require("./core/Settings");
 const path = require("path");
 
-let mainWindow, historyWindow;
+let mainWindow, historyWindow, settingsWindow;
 app.showExitPrompt = true;
 const settings = new Settings();
 
 app.whenReady().then(() => {
-
     setTimeout(() => {
         ipcMain.on("close-app", closeMainWindow);
         ipcMain.on("reload", reloadApp);
+        ipcMain.on("speed-history", createHistoryWindow);
+        ipcMain.on("app-settings", createAppSettingsWindow);
+        ipcMain.on("update-refresh-time", updateRefreshTime);
 
-        // todo deshabilitar el botón hasta que esté la respuesta.
-        // ipcMain.on("speed-history", speedHistory);
-        ipcMain.on("speed-history", (event, value) => {
-            // historyWindowController.createWindow();
-            // historyWindowController.onShow();
-            createHistoryWindow();
-        });
-
-        // mainWindowController.createWindow();
         createMainWindow();
 
         app.on('activate', function () {
             if (BrowserWindow.getAllWindows().length === 0) createMainWindow();
         })
 
-        // mainWindowController.onClose();
-
         refreshApp();
     }, 3000);
 });
 
+// ----------------------- Main Window --------------------
 function formatTime(date) {
     return Intl.DateTimeFormat('en', {
         hour: "numeric",
@@ -52,8 +44,8 @@ function logging(data) {
     }));
 }
 
-function notify(window, data) {
-    window.webContents.send(
+function notify(data) {
+    mainWindow.webContents.send(
         "speed-update",
         {
             time: formatTime(data.updateAt),
@@ -118,9 +110,7 @@ function closeMainWindow(event, value) {
 }
 
 // todo crear un consumer que "haga algo" cuando un parámetro baje de un determinado umbral.
-function reloadApp(event, value, consumers = [logging, (data) => notify(mainWindow, data), saveOnDB]) {
-    // const consumers = [this.logging, this.notify, this.saveOnDB];
-    // todo agregar hora a los logs.
+function reloadApp(event, value, consumers = [logging, notify, saveOnDB]) {
     console.info("reloading...");
     speedTest()
         .then(data => {
@@ -128,9 +118,6 @@ function reloadApp(event, value, consumers = [logging, (data) => notify(mainWind
                 consumers.forEach(consumer => {
                     consumer(data);
                 });
-            } else {
-                // volver a correr.
-                // mostrar un mensaje que ha ocurrido un error, pregunta si desea volver a ejecutar es test speed.
             }
         })
         .catch(e => {
@@ -144,7 +131,6 @@ function refreshApp() {
         settings.getSettings()
             .then(dbSettings => {
                 if (dbSettings) {
-                    // console.log(JSON.stringify(dbSettings));
                     if (dbSettings.intervalId) {
                         clearInterval(dbSettings.intervalId);
                         settings.setIntervalId(0);
@@ -161,11 +147,11 @@ function refreshApp() {
     }
 }
 
+// ----------------------- History Window --------------------
 function createHistoryWindow() {
     historyWindow = new BrowserWindow({
         width: 1050,
         height: 496,
-        modal: true,
         show: false,
         parent: mainWindow,
         webPreferences: {
@@ -181,22 +167,82 @@ function createHistoryWindow() {
         historyWindow.show();
     });
 
-    // this.historyWindow.on("close", (event, args) => {
-    //     console.info("enabling history button");
-    //     this.historyWindow.webContents.send("toggle-speed-history");
-    // });
+    historyWindow.on("close", (event, args) => {
+        mainWindow.webContents.send("toggle-button", "history");
+    });
 
     historyWindow.on("show", (event, args) => {
-        sendData();
+        mainWindow.webContents.send("toggle-button", "history");
+        sendHistoryData();
     });
 }
 
-function sendData() {
+function sendHistoryData() {
     settings.getSpeedHistory()
         .then(data => {
             historyWindow.webContents.send("speed-history-data", data);
         })
         .catch(error => {
-            console.error("sendData", error);
+            console.error("sendHistoryData", error);
+        });
+}
+
+// ----------------------- Settings Window --------------------
+function createAppSettingsWindow() {
+    settingsWindow = new BrowserWindow({
+        width: 300,
+        height: 300,
+        show: false,
+        parent: mainWindow,
+        webPreferences: {
+            preload: path.join(__dirname, 'preload.js'),
+            nodeIntegration: true
+        }
+    });
+
+    settingsWindow.loadFile(path.join(__dirname, "mvc/view/settings/settingsWindow.html"));
+    settingsWindow.removeMenu();
+    // settingsWindow.setResizable(true);
+    settingsWindow.on("ready-to-show", () => {
+        settingsWindow.show();
+    });
+
+    settingsWindow.on("close", (event, args) => {
+        mainWindow.webContents.send("toggle-button", "settings");
+    });
+
+    settingsWindow.on("show", (event, args) => {
+        mainWindow.webContents.send("toggle-button", "settings");
+        sendSettingsData();
+    });
+}
+
+function sendSettingsData() {
+    settings.getSettings()
+        .then(dbSettings => {
+            settingsWindow.webContents.send("settings-data", dbSettings);
+        })
+        .catch(error => {
+            console.error("sendSettingsData", error);
+        });
+}
+
+function updateRefreshTime(event, value) {
+    console.info(`update refresh time: ${value || 0}`);
+    settings.getSettings()
+        .then(dbSettings => {
+            console.info(JSON.stringify(dbSettings));
+            if (value && dbSettings.refreshTime !== value * 60 * 1000) {
+                return settings.setRefreshTime(value * 60 * 1000);
+            }
+            return undefined;
+        })
+        .then(value => {
+            if (value) {
+                refreshApp();
+            }
+        })
+        .catch(error => {
+            console.error("updateRefreshTime", error);
         });
 }

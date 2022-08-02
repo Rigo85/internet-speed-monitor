@@ -1,0 +1,50 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="Content-Security-Policy"
+              content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'">
+        <link rel="stylesheet" href="../../../resources/materialize/1.0.0/css/materialize.min.css">
+        <link href="settingsWindow.css" rel="stylesheet">
+        <title>Settings</title>
+    </head>
+    <body>
+        <div class="container">
+            <form>
+                <div class="row center">
+                    <label class="center-align" id="label_range_refresh" for="select_refresh_time">Refresh Time</label>
+                </div>
+                <div class="input-field col s12">
+                    <select id="select_refresh_time">
+                        <option value="5">5 min</option>
+                        <option value="10">10 min</option>
+                        <option value="15">15 min</option>
+                        <option value="20">20 min</option>
+                        <option value="30">30 min</option>
+                        <option value="40">40 min</option>
+                        <option value="50">50 min</option>
+                        <option value="60">60 min</option>
+                    </select>
+<!--                    <label>Materialize Multiple Select</label>-->
+                </div>
+                <!--                <p class="range-field">-->
+                <!--                    <input type="range" id="range_refresh_time" list="step_list"/>-->
+                <!--                </p>-->
+            </form>
+        </div>
+<!--        <datalist id="step_list">-->
+<!--            <option>5</option>-->
+<!--            <option>10</option>-->
+<!--            <option>15</option>-->
+<!--            <option>20</option>-->
+<!--            <option>30</option>-->
+<!--            <option>40</option>-->
+<!--            <option>50</option>-->
+<!--            <option>60</option>-->
+<!--        </datalist>-->
+        <!-- You can also require other files to run in this process -->
+        <script src="../../../resources/jquery-3.5.1.js"
+                integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+        <script src="../../../resources/materialize/1.0.0/js/materialize.min.js"></script>
+        <script src="settingsWindow.js"></script>
+    </body>
+</html>

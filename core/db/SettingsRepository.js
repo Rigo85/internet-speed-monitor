@@ -37,7 +37,7 @@ class SettingsRepository {
     }
 
     updateRefreshTime(refreshTime = 5 * 60 * 1000) {
-        this.getSettings()
+        return this.getSettings()
             .then(settings => {
                 if (settings) {
                     return this.dao.run(

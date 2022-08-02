@@ -6,7 +6,7 @@
 // process.
 
 const buttonHistory = document.getElementById("button_history");
-const buttonRefresh = document.getElementById("button_refresh");
+// const buttonRefresh = document.getElementById("button_refresh");
 const buttonSettings = document.getElementById("button_settings");
 const buttonClose = document.getElementById("button_close");
 const labelTime = document.getElementById("label_time");
@@ -18,12 +18,12 @@ buttonHistory.addEventListener("click", event => {
     window.electronAPI.send("speed-history");
 });
 
-buttonRefresh.addEventListener("click", event => {
-    window.electronAPI.send("test", "------------> refresh");
-});
+// buttonRefresh.addEventListener("click", event => {
+//     window.electronAPI.send("test", "------------> refresh");
+// });
 
 buttonSettings.addEventListener("click", event => {
-    window.electronAPI.send("test", "------------> settings");
+    window.electronAPI.send("app-settings");
 });
 
 buttonClose.addEventListener("click", event => {
@@ -40,7 +40,17 @@ window.electronAPI.on("speed-update", (event, value) => {
     labelUpload.innerText = value.uploadSpeed;
 });
 
-window.electronAPI.on("toggle-speed-history", (event, value) => {
-    console.info("toggling speed history");
-    buttonHistory.classList.add("disable");
+window.electronAPI.on("toggle-button", (event, value) => {
+    const map = {
+        history: buttonHistory,
+        settings: buttonSettings
+    };
+    const button = map[value || ""];
+    if (button) {
+        if (button.classList.contains("disabled")) {
+            button.classList.remove("disabled");
+        } else {
+            button.classList.add("disabled");
+        }
+    }
 });
