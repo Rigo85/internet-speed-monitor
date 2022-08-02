@@ -54,7 +54,20 @@ class Settings {
     }
 
     getSpeedHistory() {
-        return this.speedTestRepository.getAllData();
+        return this.speedTestRepository.getAllData()
+            .then(data => data.map(d => ({
+                    ...d,
+                    UpdateAt: Intl.DateTimeFormat('en', {
+                        day: "2-digit",
+                        dayPeriod: "long",
+                        month: "short",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        second: "2-digit",
+                        hour12: true
+                    }).format(new Date(d.UpdateAt))
+                }))
+            );
     }
 }
 
