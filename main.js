@@ -176,13 +176,13 @@ function createHistoryWindow() {
 
     switch (process.platform) {
         case 'darwin':
-            mainWindow.setIcon('resources/icon.icns');
+            historyWindow.setIcon('resources/icon.icns');
             break;
         case 'win32':
-            mainWindow.setIcon('resources/icon.ico');
+            historyWindow.setIcon('resources/icon.ico');
             break;
         default:
-            mainWindow.setIcon('resources/icon.png');
+            historyWindow.setIcon('resources/icon.png');
             break;
     }
 
@@ -228,13 +228,13 @@ function createAppSettingsWindow() {
 
     switch (process.platform) {
         case 'darwin':
-            mainWindow.setIcon('resources/icon.icns');
+            settingsWindow.setIcon('resources/icon.icns');
             break;
         case 'win32':
-            mainWindow.setIcon('resources/icon.ico');
+            settingsWindow.setIcon('resources/icon.ico');
             break;
         default:
-            mainWindow.setIcon('resources/icon.png');
+            settingsWindow.setIcon('resources/icon.png');
             break;
     }
 
