@@ -59,9 +59,28 @@ function saveOnDB(data) {
 }
 
 function createMainWindow() {
+    let width, height, icon;
+    switch (process.platform) {
+        case 'darwin':
+            icon = 'resources/icon.icns';
+            width = 400;
+            height = 260;
+            break;
+        case 'win32':
+            icon = 'resources/icon.ico';
+            width = 400;
+            height = 290;
+            break;
+        default:
+            icon = 'resources/icon.png';
+            width = 400;
+            height = 260;
+            break;
+    }
+
     mainWindow = new BrowserWindow({
-        width: 400,
-        height: 260,
+        width: width,
+        height: height,
         // frame: false,
         transparent: true,
         webPreferences: {
@@ -74,19 +93,7 @@ function createMainWindow() {
     mainWindow.removeMenu();
     mainWindow.setAlwaysOnTop(true);
     mainWindow.setResizable(false);
-
-    switch (process.platform) {
-        case 'darwin':
-            mainWindow.setIcon('resources/icon.icns');
-            break;
-        case 'win32':
-            mainWindow.setIcon('resources/icon.ico');
-            break;
-        default:
-            mainWindow.setIcon('resources/icon.png');
-            break;
-    }
-
+    mainWindow.setIcon(icon);
     mainWindow.on("close", closeMainWindow);
 }
 
@@ -167,6 +174,18 @@ function createHistoryWindow() {
         historyWindow.show();
     });
 
+    switch (process.platform) {
+        case 'darwin':
+            mainWindow.setIcon('resources/icon.icns');
+            break;
+        case 'win32':
+            mainWindow.setIcon('resources/icon.ico');
+            break;
+        default:
+            mainWindow.setIcon('resources/icon.png');
+            break;
+    }
+
     historyWindow.on("close", (event, args) => {
         mainWindow.webContents.send("toggle-button", "history");
     });
@@ -206,6 +225,18 @@ function createAppSettingsWindow() {
     settingsWindow.on("ready-to-show", () => {
         settingsWindow.show();
     });
+
+    switch (process.platform) {
+        case 'darwin':
+            mainWindow.setIcon('resources/icon.icns');
+            break;
+        case 'win32':
+            mainWindow.setIcon('resources/icon.ico');
+            break;
+        default:
+            mainWindow.setIcon('resources/icon.png');
+            break;
+    }
 
     settingsWindow.on("close", (event, args) => {
         mainWindow.webContents.send("toggle-button", "settings");
