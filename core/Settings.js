@@ -65,9 +65,15 @@ class Settings {
                         minute: "2-digit",
                         second: "2-digit",
                         hour12: true
-                    }).format(new Date(d.UpdateAt))
+                    }).format(new Date(d.UpdateAt)),
+                    DownloadSpeed: this.formatSpeed(d.DownloadSpeed),
+                    UploadSpeed: this.formatSpeed(d.UploadSpeed)
                 }))
             );
+    }
+
+    formatSpeed(data) {
+        return Number.parseFloat(`${data / 125000}`).toFixed(2);
     }
 }
 

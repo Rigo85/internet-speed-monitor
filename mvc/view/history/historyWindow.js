@@ -12,14 +12,22 @@ $(document).ready(function () {
             'id',
             'DownloadSpeed',
             'UploadSpeed',
-            'Ping',
+            'Latency',
             'Jitter',
             'UpdateAt',
             'ISP',
             'Server',
-            'Server Country',
             'Server City',
-            'Server Distance'].map(c => ({data: c}))
+            'Server Country',
+            'Network Interface',
+            'URL'
+        ].map(c => ({data: c})),
+        columnDefs: [{
+            target: 11,
+            render: (data, type, row, meta) => {
+                return `<a target="_blank" href="${data}">Result</a>`;
+            }
+        }]
     });
 });
 

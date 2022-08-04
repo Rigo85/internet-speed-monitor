@@ -12,11 +12,11 @@ class SpeedTestRepository {
     }
 
     create(speedResult) {
-        return this.dao.run('INSERT INTO speedtest (speedResult) VALUES (?)',[speedResult]);
+        return this.dao.run('INSERT INTO speedtest (speedResult) VALUES (?)', [speedResult]);
     }
 
     getById(id) {
-        return this.dao.get(`SELECT * FROM speedtest WHERE id = ?`,[id]);
+        return this.dao.get(`SELECT * FROM speedtest WHERE id = ?`, [id]);
     }
 
     getAll() {
@@ -27,16 +27,17 @@ class SpeedTestRepository {
         return this.dao.all(`
             select
                 id,
-                "speedResult" ->> 'downloadSpeed' as "DownloadSpeed",
-                "speedResult" ->> 'uploadSpeed' as "UploadSpeed",
-                "speedResult" ->> 'ping' as "Ping",
-                "speedResult" ->> 'jitter' as "Jitter",
+                "speedResult" -> 'download' ->> 'bandwidth' as "DownloadSpeed",
+                "speedResult" -> 'upload' ->> 'bandwidth' as "UploadSpeed",
+                "speedResult" -> 'ping' ->> 'latency' as "Latency",
+                "speedResult" -> 'ping' ->> 'jitter' as "Jitter",
                 "speedResult" ->> 'updateAt' as "UpdateAt",
-                "speedResult" -> 'client' ->> 'isp' as "ISP",
-                "speedResult" -> 'server' ->> 'sponsor' as "Server",
+                "speedResult" ->> 'isp' as "ISP",
+                "speedResult" -> 'server' ->> 'name' as "Server",
+                "speedResult" -> 'server' ->> 'location' as "Server City",
                 "speedResult" -> 'server' ->> 'country' as "Server Country",
-                "speedResult" -> 'server' ->> 'city' as "Server City",
-                "speedResult" -> 'server' ->> 'distance' as "Server Distance"
+                "speedResult" -> 'interface' ->> 'name' as "Network Interface",
+                "speedResult" -> 'result' ->> 'url' as "URL"
             from speedtest
             order by
                 id desc ;

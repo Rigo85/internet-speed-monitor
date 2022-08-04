@@ -1,6 +1,6 @@
 const {app, BrowserWindow, ipcMain, dialog} = require('electron');
 
-const {speedTest} = require("./core/SpeedTester");
+const {speedTest} = require("./core/OoklaSpeedTester");
 const Settings = require("./core/Settings");
 const path = require("path");
 
@@ -27,6 +27,10 @@ app.whenReady().then(() => {
 });
 
 // ----------------------- Main Window --------------------
+function formatSpeed(data) {
+    return Number.parseFloat(`${data / 125000}`).toFixed(2);
+}
+
 function formatTime(date) {
     return Intl.DateTimeFormat('en', {
         hour: "numeric",
@@ -39,8 +43,8 @@ function formatTime(date) {
 function logging(data) {
     console.info("speed-update", JSON.stringify({
         time: formatTime(data.updateAt),
-        downloadSpeed: data.downloadSpeed,
-        uploadSpeed: data.uploadSpeed
+        downloadSpeed: formatSpeed(data.download.bandwidth),
+        uploadSpeed: formatSpeed(data.upload.bandwidth)
     }));
 }
 
@@ -49,8 +53,8 @@ function notify(data) {
         "speed-update",
         {
             time: formatTime(data.updateAt),
-            downloadSpeed: data.downloadSpeed,
-            uploadSpeed: data.uploadSpeed
+            downloadSpeed: formatSpeed(data.download.bandwidth),
+            uploadSpeed: formatSpeed(data.upload.bandwidth)
         })
 }
 
@@ -192,7 +196,9 @@ function createHistoryWindow() {
 
     historyWindow.on("show", (event, args) => {
         mainWindow.webContents.send("toggle-button", "history");
-        sendHistoryData();
+        setTimeout(() => {
+            sendHistoryData();
+        }, 500);
     });
 }
 
