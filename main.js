@@ -173,7 +173,7 @@ function createHistoryWindow() {
     });
 
     historyWindow.loadFile(path.join(__dirname, "mvc/view/history/historyWindow.html"));
-    historyWindow.removeMenu();
+    // historyWindow.removeMenu();
     historyWindow.setResizable(true);
     historyWindow.on("ready-to-show", () => {
         historyWindow.show();

@@ -1,11 +1,32 @@
 $(document).ready(function () {
+    const buttonCommon = {
+        exportOptions: {
+            format: {
+                body: function (data, row, column, node) {
+                    if (column === 11) {
+                        try {
+                            const matches = data.match(/href="(.+)"/);
+                            return matches[1] || "";
+                        } catch (e) {
+                            console.error("exporting excel, formatting url column");
+                            return "";
+                        }
+                    }
+                    return data;
+                }
+            }
+        }
+    };
+
     $('#table_speed_history').DataTable({
         "lengthMenu": false,
         "bLengthChange": false,
         "pageLength": 10,
         dom: 'Bfrtip',
         buttons: [
-            'excel'
+            $.extend(true, {}, buttonCommon, {
+                extend: 'excelHtml5'
+            }),
         ],
         data: [],
         columns: [
