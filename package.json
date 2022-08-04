@@ -20,6 +20,7 @@
     "shelljs": "^0.8.5"
   },
   "dependencies": {
+    "electron-log": "^4.4.8",
     "sqlite3": "^5.0.10",
     "universal-speedtest": "^2.0.5"
   }
