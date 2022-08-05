@@ -147,7 +147,9 @@ function refreshApp() {
                         clearInterval(dbSettings.intervalId);
                         settings.setIntervalId(0);
                     }
+                    console.info(`creating reload every ${dbSettings.refreshTime / 60000} min`);
                     const intervalId = setInterval(() => reloadApp(), dbSettings.refreshTime);
+                    console.info(`interval id: ${intervalId}`);
                     settings.setIntervalId(intervalId);
                 }
             })
