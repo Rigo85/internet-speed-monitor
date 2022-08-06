@@ -1,6 +1,6 @@
 const {app, BrowserWindow, ipcMain, dialog, screen, Rectangle} = require('electron');
-// const log = require('electron-log');
-// Object.assign(console, log.functions);
+const log = require('electron-log');
+Object.assign(console, log.functions);
 const {speedTest} = require("./core/OoklaSpeedTester");
 const Settings = require("./core/Settings");
 const path = require("path");
