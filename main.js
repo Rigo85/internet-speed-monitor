@@ -1,6 +1,6 @@
-const {app, BrowserWindow, ipcMain, dialog} = require('electron');
-const log = require('electron-log');
-Object.assign(console, log.functions);
+const {app, BrowserWindow, ipcMain, dialog, screen, Rectangle} = require('electron');
+// const log = require('electron-log');
+// Object.assign(console, log.functions);
 const {speedTest} = require("./core/OoklaSpeedTester");
 const Settings = require("./core/Settings");
 const path = require("path");
@@ -64,28 +64,33 @@ function saveOnDB(data) {
 }
 
 function createMainWindow() {
-    let width, height, icon;
+    let _width, _height, icon;
     switch (process.platform) {
         case 'darwin':
             icon = 'resources/icon.icns';
-            width = 400;
-            height = 260;
+            _width = 400;
+            _height = 260;
             break;
         case 'win32':
             icon = 'resources/icon.ico';
-            width = 400;
-            height = 290;
+            _width = 400;
+            _height = 290;
             break;
         default:
             icon = 'resources/icon.png';
-            width = 400;
-            height = 260;
+            _width = 400;
+            _height = 260;
             break;
     }
 
+    const monitor = screen.getPrimaryDisplay();
+    const {x, y, height, width} = monitor.bounds;
+
     mainWindow = new BrowserWindow({
-        width: width,
-        height: height,
+        width: _width,
+        height: _height,
+        x: x + Math.trunc(width / 2) - Math.trunc(_width / 2),
+        y: y + Math.trunc(height / 2) - Math.trunc(_height / 2),
         // frame: false,
         transparent: true,
         webPreferences: {
@@ -163,9 +168,15 @@ function refreshApp() {
 
 // ----------------------- History Window --------------------
 function createHistoryWindow() {
+    const monitor = screen.getPrimaryDisplay();
+    const {x, y, height, width} = monitor.bounds;
+    const _width = 1050;
+    const _height = 496;
     historyWindow = new BrowserWindow({
-        width: 1050,
-        height: 496,
+        width: _width,
+        height: _height,
+        x: x + Math.trunc(width / 2) - Math.trunc(_width / 2),
+        y: y + Math.trunc(height / 2) - Math.trunc(_height / 2),
         show: false,
         parent: mainWindow,
         webPreferences: {
@@ -217,9 +228,15 @@ function sendHistoryData() {
 
 // ----------------------- Settings Window --------------------
 function createAppSettingsWindow() {
+    const _width = 300;
+    const _height = 300;
+    const monitor = screen.getPrimaryDisplay();
+    const {x, y, height, width} = monitor.bounds;
     settingsWindow = new BrowserWindow({
-        width: 300,
-        height: 300,
+        width: _width,
+        height: _height,
+        x: x + Math.trunc(width / 2) - Math.trunc(_width / 2),
+        y: y + Math.trunc(height / 2) - Math.trunc(_height / 2),
         show: false,
         parent: mainWindow,
         webPreferences: {
